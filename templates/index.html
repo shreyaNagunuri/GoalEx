@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GOALEX Clustering Tool</title>
+        <link rel="stylesheet" href="../static/styles/styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>GOALEX Clustering Tool</h1>
+            </header>
+    
+            <main>
+                <form id="clusteringForm" class="clustering-form" action="#" method="post" enctype="multipart/form-data">
+                    <div class="form-section upload-section">
+                        <label for="fileUpload"><h2>Upload File:</h2></label>
+                        <small class="note">Upload a text file (.txt)</small>
+                        <br>
+                        <input type="file" name="fileUpload" accept=".txt" required>
+                    </div>
+                    <div class="form-section input-section">
+                        <label for="clusteringGoal"><h2>Clustering Goal:</h2></label>
+                        <small class="note">Describe how you want the file to be clustered e.g. I would like to cluster them based on topic; each cluster should have a description of 'has a topic of "something"'</small>
+                        <br>
+                        <textarea name="clusteringGoal" placeholder="Enter clustering goal" maxlength="150"></textarea>
+                    </div>
+                    <div class="form-section hyperparameters-section">
+                        <label for="overlapPenalty"><h2>Cluster Overlap Penalty:</h2></label>
+                        <input type="number" min="0" max="1" step="0.1" name="overlapPenalty" placeholder="Enter penalty value">
+    
+                        <label for="numClusters"><h2>Number of Clusters:</h2></label>
+                        <input type="number" name="numClusters" placeholder="Enter number of clusters">
+    
+                        <label for="maxClusterSize"><h2>Max Cluster Fraction:</h2></label>
+                        <input type="number" min="0" max="1" step="0.1" name="maxClusterSize" placeholder="Enter max cluster fraction">
+                    </div>
+                    <button type="submit" class="submit-btn" value="submit">Submit</button>
+                </form>
+    
+                <section class="output-section" id="output">
+                    <h2>Results</h2>
+                    <div id="results" class="results-container">
+                        {% if txt_file %}
+                            <h3>Uploaded File:</h3>
+                            <pre>{{ txt_file }}</pre>
+                        {% endif %}
+                        
+                        {% if png_file %}
+                            <h3>Generated Plot:</h3>
+                            <img src="{{ url_for('static', filename='/images/plot.png') }}" class="image" />
+                        {% endif %}
+                    </div>
+                </section>
+            </main>
+        </div>
+    
+    </body>
+</html>

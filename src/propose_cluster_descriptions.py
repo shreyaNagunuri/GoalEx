@@ -1,6 +1,9 @@
 import json
 import random
 from tqdm import trange
+# import src.utils
+# from src.utils import parse_template
+# from src.cluster_problem import ClusterProblem as Problem
 import utils
 from utils import parse_template
 from cluster_problem import ClusterProblem as Problem
@@ -140,6 +143,7 @@ def propose_descriptions(
     if log_propose_prompt == 0:
         print("Running the proposer model...")
         print(f"{proposer_prompt}")
+    # chat_gpt_query_model = src.utils.ChatGPTWrapperWithCost()
     chat_gpt_query_model = utils.ChatGPTWrapperWithCost()
     raw_response = chat_gpt_query_model(
         prompt=proposer_prompt, model=model, temperature=0.2
@@ -158,8 +162,8 @@ def propose_descriptions(
 
     # parse the response to get the descriptions
     # each description is separated by a newline, surrounded by quotes according to the prompt
+    # descriptions = src.utils.parse_description_responses(text_response)
     descriptions = utils.parse_description_responses(text_response)
-
     # the later ones could very likely be of lower quality.
     descriptions = descriptions[:num_descriptions_per_round]
     # return the descriptions, the prompt, and the text samples used in the prompt
@@ -299,7 +303,7 @@ if __name__ == "__main__":
     RETURN_DESCRIPTIONS_ONLY = False
     NUM_DESCRIPTIONS_TO_PROPOSE = 18
     RANDOM_SEEDS = [0]  # , 5, 10, 15, 20]
-    TEMPLATE = "templates/gpt_cluster_proposer_w_example.txt"
+    TEMPLATE = "template/gpt_cluster_proposer_w_example.txt"
 
     for RANDOM_SEED in RANDOM_SEEDS:
         # propose descriptions

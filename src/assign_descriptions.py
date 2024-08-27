@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 import torch
 from tqdm import tqdm
+# from src.utils import ChatGPTWrapperWithCost, gpt3wrapper_texts_batch_iter, parse_template
 from utils import ChatGPTWrapperWithCost, gpt3wrapper_texts_batch_iter, parse_template
 import json
 from functools import partial
@@ -18,11 +19,11 @@ MAX_SOURCE_LENGTH = 1024
 TEMPERATURE = 0.001
 sm = torch.nn.Softmax(dim=-1)
 
-GPT_TEMPLATE = "templates/gpt_assigner.txt"
-GPT_MULTI_TEMPLATE_ONE_OUTPUT = "templates/gpt_multi_assigner_one_output.txt"
+GPT_TEMPLATE = "template/gpt_assigner.txt"
+GPT_MULTI_TEMPLATE_ONE_OUTPUT = "template/gpt_multi_assigner_one_output.txt"
 
-T5_TEMPLATE = "templates/t5_assigner.txt"
-T5_MULTI_TEMPLATE_ONE_OUTPUT = "templates/t5_multi_assigner_one_output.txt"
+T5_TEMPLATE = "template/t5_assigner.txt"
+T5_MULTI_TEMPLATE_ONE_OUTPUT = "template/t5_multi_assigner_one_output.txt"
 
 
 @dataclass
@@ -431,7 +432,7 @@ def assign_descriptions(
     texts: List[str],
     assigner: Assigner,
     template: str,
-    use_multi_assigner: bool = False,
+    use_multi_assigner: bool = True,
     add_null_description: bool = True,
     progress_bar: bool = False,
 ) -> np.ndarray:
@@ -534,7 +535,7 @@ if __name__ == "__main__":
             descriptions,
             texts,
             assigner,
-            template="templates/gpt_assigner.txt",
+            template="template/gpt_assigner.txt",
             use_multi_assigner=False,
             add_null_description=False,
             progress_bar=True,
@@ -546,7 +547,7 @@ if __name__ == "__main__":
             descriptions,
             texts,
             assigner,
-            template="templates/gpt_multi_assigner.txt",
+            template="template/gpt_multi_assigner.txt",
             use_multi_assigner=True,
             add_null_description=True,
             progress_bar=True,
@@ -558,7 +559,7 @@ if __name__ == "__main__":
             descriptions,
             texts,
             assigner,
-            template="templates/gpt_multi_assigner_one_output.txt",
+            template="template/gpt_multi_assigner_one_output.txt",
             use_multi_assigner=True,
             add_null_description=False,
             progress_bar=True,

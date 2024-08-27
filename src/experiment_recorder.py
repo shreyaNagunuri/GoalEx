@@ -1,8 +1,11 @@
 import json
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 from collections import Counter
+# import src.utils_performance
 import utils_performance
+import random
 
 
 class ExperimentRecorder:
@@ -27,6 +30,13 @@ class ExperimentRecorder:
             )
 
     def record_assign(self, descriptions, text_descriptions_matching, name):
+        # print("Stage Assign", name)
+        # (
+        #     all_recall,
+        #     all_precision,
+        #     single_recalls,
+        #     single_precisions,
+        # ) = src.utils_performance.get_descriptions_performance(text_descriptions_matching)
         print("Stage Assign", name)
         (
             all_recall,
@@ -64,6 +74,15 @@ class ExperimentRecorder:
 
         if self.label is not None:
             labels = np.array(self.label.labels)
+            # unmatched_text_indices = cluster_predictions == -1
+            # (
+            #     normalized_mutial_info,
+            #     adjusted_rand_index,
+            #     macro_f1,
+            # ) = src.utils_performance.get_cluster_performance(
+            #     labels[~unmatched_text_indices],
+            #     cluster_predictions[~unmatched_text_indices],
+            # )
             unmatched_text_indices = cluster_predictions == -1
             (
                 normalized_mutial_info,
@@ -81,6 +100,10 @@ class ExperimentRecorder:
                 macro_f1,
             )
             true_descriptions = self.label.class_descriptions
+            # _, mapping = src.utils_performance.assign_labels(
+            #     labels[~unmatched_text_indices],
+            #     cluster_predictions[~unmatched_text_indices],
+            # )
             _, mapping = utils_performance.assign_labels(
                 labels[~unmatched_text_indices],
                 cluster_predictions[~unmatched_text_indices],
@@ -131,7 +154,68 @@ class ExperimentRecorder:
                 },
                 f,
             )
+        
+        self.generate_cluster_summary(descriptions=descriptions, cluster_predictions=cluster_predictions, name=name)
 
+    def generate_cluster_summary(self, descriptions, cluster_predictions, name):
+        texts = self.problem.texts
+        total_predictions = self.n
+        distribution = Counter(cluster_predictions)
+        #cluster_info will be a list of dicts, where each dict describes a cluster
+        cluster_info = []
+        cluster_description = []
+        cluster_percentage = []
+
+        #i is the index, desc is the value at that index
+        for i, desc in enumerate(descriptions):
+            count = distribution[i]
+            percentage = (count / total_predictions) * 100 if total_predictions!=0 else 0
+            cluster_texts = [texts[j] for j, cluster_num in enumerate(cluster_predictions) if cluster_num == i]
+            examples = random.sample(cluster_texts, min(3, len(cluster_texts)))
+            cluster_description.append(desc)
+            cluster_percentage.append(percentage)
+            cluster_info.append({
+                'description': desc,
+                'count': count,
+                'percentage': percentage,
+                'examples': examples
+            })
+        # filename = os.path.join("./uploads", f"iteration-{self.iteration}", f"{name}_cluster_info.txt")
+        filename = os.path.join("./uploads", "cluster_info.txt")
+
+        with open(filename, 'w') as file:
+            file.write("This text file provides more information about each selected cluster\n" + "-" * 70 + "\n")
+            file.write(f"Unmatched count: {distribution[-1]} = {(distribution[-1]/total_predictions):.2f}%   Data size: {total_predictions}\n" + "-" * 70 + "\n")
+            for info in cluster_info:
+                file.write(f"==> Description: {info['description']}\n")
+                file.write(f"==> Count: {info['count']}\n")
+                file.write(f"==> Percentage: {info['percentage']:.2f}%\n")
+                file.write("==> Examples:\n")
+                for example in info['examples'][:3]:
+                    file.write(f"- {example}\n")
+                file.write("\n" + "-" * 70 + "\n")  # adding a line of dashes for separation
+        
+        # Creating plot
+        fig = plt.figure(figsize=(8, 4))
+        if all(p == 0 for p in cluster_percentage):
+            # All percentages are zero, so display an empty plot with a message
+            plt.text(0.5, 0.5, 'No clusters assigned', horizontalalignment='center', verticalalignment='center', fontsize=20, transform=plt.gca().transAxes)
+            plt.axis('off')  # Hide axes
+        else:
+            # Creating pie chart plot
+            plt.suptitle('Cluster Distribution')
+            plt.pie(cluster_percentage, labels=cluster_description, autopct='%1.1f%%')
+            plt.tight_layout()
+
+        # Save the plot
+        fig_path = os.path.join("./static/images", "plot.png")
+        plt.savefig(fig_path)
+
+        # Show plot
+        plt.show()
+        
+        
+        
     def next_iteration(self):
         self.iteration += 1
         os.makedirs(

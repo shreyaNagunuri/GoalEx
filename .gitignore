@@ -6,6 +6,11 @@ xclass*
 explore.ipynb
 experiments*
 results
+uploads
+dump.py
+images
+processed_data
+scripts
 
 # working on
 __pycache__ 

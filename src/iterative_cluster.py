@@ -9,6 +9,25 @@ from collections import Counter
 from typing import List, Tuple
 
 import numpy as np
+# from src.propose_cluster_descriptions import (
+#     propose_descriptions_multi_round,
+# )
+# from src.assign_descriptions import (
+#     assign_descriptions,
+#     get_assigner,
+#     Assigner,
+# )
+# from src.cover_algo import greedy_cover, maximum_set_coverage
+
+# from src.cluster_problem import ClusterProblem as Problem, ClusterProblemLabel as Label
+# from src.utils import (
+#     get_max_num_samples_in_proposer,
+#     get_avg_length,
+#     get_length_in_gpt2_tokens,
+#     estimate_querying_cost,
+# )
+
+# from src.experiment_recorder import ExperimentRecorder
 from propose_cluster_descriptions import (
     propose_descriptions_multi_round,
 )
@@ -65,9 +84,10 @@ def estimate_cost_for_clustering(
             + 1
         )
     )
-
+    current_working_directory = '/data/ersp2023/GoalEx/'
+    absolute_path = os.path.join(current_working_directory, proposer_template)
     # figure out how many tokens are there in the proposer prompt
-    with open(proposer_template, "r") as f:
+    with open(absolute_path, "r") as f:
         proposer_template = f.read()
         proposer_template_length = get_length_in_gpt2_tokens(proposer_template)
     goal_length = get_length_in_gpt2_tokens(problem.goal)
@@ -208,7 +228,7 @@ def propose(
     proposer_num_descriptions_to_propose: int = 30,
     proposer_num_rounds_to_propose: int = None,
     proposer_num_descriptions_per_round: int = 8,
-    proposer_template: str = "templates/gpt_cluster_proposer_short.txt",
+    proposer_template: str = "template/gpt_cluster_proposer_short.txt",
     random_seed: int = 0,
 ) -> List[str]:
     """
@@ -231,7 +251,7 @@ def propose(
     proposer_num_descriptions_per_round : int, optional
         The number of descriptions to propose per round, by default 8
     proposer_template : str, optional
-        The template used to construct the prompt, by default "templates/gpt_cluster_proposer_short.txt"; can switch to proposing more detailed descriptions by using "templates/gpt_cluster_proposer_detailed.txt"
+        The template used to construct the prompt, by default "template/gpt_cluster_proposer_short.txt"; can switch to proposing more detailed descriptions by using "template/gpt_cluster_proposer_detailed.txt"
     random_seed : int, optional
         The random seed, by default 0
 
@@ -240,7 +260,6 @@ def propose(
     List[str]
         The proposed descriptions. (we use descriptions and explanations interchangeably)
     """
-
     # obtain the proposer results for multiple rounds
     proposer_results = propose_descriptions_multi_round(
         problem=problem,
@@ -369,11 +388,11 @@ def run(
     proposer_num_descriptions_to_propose: int = 30,
     proposer_num_rounds_to_propose: int = None,
     proposer_num_descriptions_per_round: int = 8,
-    proposer_template: str = "templates/gpt_cluster_proposer_short.txt",
+    proposer_template: str = "template/gpt_cluster_proposer_short.txt",
     # assigner arguments
     assigner_name: str = "google/flan-t5-xl",
-    assigner_for_proposed_descriptions_template: str = "templates/t5_assigner.txt",
-    assigner_for_final_assignment_template: str = "templates/t5_multi_assigner_one_output.txt",
+    assigner_for_proposed_descriptions_template: str = "template/t5_assigner.txt",
+    assigner_for_final_assignment_template: str = "template/t5_multi_assigner_one_output.txt",
     # clusterer arguments
     cluster_algo: str = "maximum_set_coverage",
     cluster_num_clusters: int = None,
@@ -606,7 +625,7 @@ def run(
         ]
         for j, description in enumerate(selected_descriptions)
     }
-
+    
     return description2texts
 
 
@@ -638,14 +657,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--proposer_template",
         type=str,
-        default="templates/gpt_cluster_proposer_short.txt",
+        default="template/gpt_cluster_proposer_short.txt",
     )
 
     parser.add_argument("--assigner_name", type=str, default="google/flan-t5-xl")
     parser.add_argument(
         "--assigner_for_proposed_descriptions_template",
         type=str,
-        default="templates/t5_assigner.txt",
+        default="template/t5_assigner.txt",
     )
     parser.add_argument(
         "--assigner_for_final_assignment_template", type=str, default=None

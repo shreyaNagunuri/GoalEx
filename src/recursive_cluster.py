@@ -9,7 +9,7 @@ from dataclasses_json import dataclass_json
 from typing import Dict
 
 
-with open("templates/subgoal.txt") as f:
+with open("template/subgoal.txt") as f:
     SUBGOAL_TEMPLATE = f.read()
 
 
@@ -84,9 +84,9 @@ def cluster_subtree(
         problem=problem,
         exp_dir=f"experiments/{taxonomy.node_name}",
         proposer_model=proposer_model,
-        proposer_template="templates/gpt_cluster_proposer_detailed.txt",
+        proposer_template="template/gpt_cluster_proposer_detailed.txt",
         assigner_name=assigner_name,
-        assigner_for_proposed_descriptions_template="templates/gpt_assigner.txt",
+        assigner_for_proposed_descriptions_template="template/gpt_assigner.txt",
         cluster_num_clusters=num_clusters,
         cluster_overlap_penalty=overlap_penalty,
         cluster_not_cover_penalty=not_cover_penalty,

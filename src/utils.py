@@ -9,8 +9,11 @@ import openai
 import random
 import numpy as np
 
-openai.api_key = os.environ["OPENAI_API_KEY"]
-openai.organization = os.environ["OPENAI_ORG"]
+# openai.api_key = os.environ["OPENAI_API_KEY"]
+# openai.organization = os.environ["OPENAI_ORG"]
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+openai.organization = os.environ.get("OPENAI_ORG")
+
 GPT2TOKENIZER = GPT2Tokenizer.from_pretrained("gpt2")
 
 
