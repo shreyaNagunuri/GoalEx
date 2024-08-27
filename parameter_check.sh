@@ -8,7 +8,7 @@ base_command="python src/iterative_cluster.py \
   --proposer_model gpt-4 \
   --assigner_name google/flan-t5-xl \
   --proposer_num_descriptions_to_propose 100 \
-  --assigner_for_final_assignment_template templates/t5_multi_assigner_one_output.txt \
+  --assigner_for_final_assignment_template template/t5_multi_assigner_one_output.txt \
   --cluster_num_clusters 10 \
   --iterative_max_rounds 1"
 

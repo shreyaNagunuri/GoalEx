@@ -56,7 +56,7 @@ for index in cluster_indices:
     # Command to be run for this subcluster
     cmd = f"CUDA_VISIBLE_DEVICES=2 python src/iterative_cluster.py --data_path {subset_dir_path} " \
           f"--exp_dir {new_exp_dir} --proposer_model gpt-4 --assigner_name google/flan-t5-xl " \
-          "--proposer_num_descriptions_to_propose 20 --assigner_for_final_assignment_template templates/t5_multi_assigner_one_output.txt " \
+          "--proposer_num_descriptions_to_propose 20 --assigner_for_final_assignment_template template/t5_multi_assigner_one_output.txt " \
           "--cluster_num_clusters 5 --cluster_overlap_penalty 0.2 --cluster_not_cover_penalty 1.0 " \
           "--iterative_max_rounds 1 --verbose"
 
