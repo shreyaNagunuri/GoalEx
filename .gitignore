@@ -10,9 +10,7 @@ uploads
 dump.py
 processed_data
 scripts
-parameter_check.sh
-run_goal_ex.sh
-subcluster.py
+unused
 static/scripts
 
 # working on
