@@ -5,6 +5,6 @@ dataclasses
 dataclasses_json
 scikit-learn
 scipy
-sentencepiece
-flask
-werkzeug
+Flask==3.0.2
+Werkzeug==3.0.1
+Jinja2==3.1.3
