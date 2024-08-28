@@ -1,8 +1,0 @@
-.gitignore
-README.MD
-goalex_demo.png
-goalex_hierarchy.png
-parameter_check.sh
-run_goal_ex.sh
-subcluster.py
-static/scripts

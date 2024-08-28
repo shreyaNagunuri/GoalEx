@@ -8,9 +8,12 @@ experiments*
 results
 uploads
 dump.py
-images
 processed_data
 scripts
+parameter_check.sh
+run_goal_ex.sh
+subcluster.py
+static/scripts
 
 # working on
 __pycache__ 
