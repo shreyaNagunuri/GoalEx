@@ -6,6 +6,5 @@ dataclasses_json
 scikit-learn
 scipy
 sentencepiece
-python==3.12
-Flask==2.2.2
-Werkzeug==2.2.3
+flask
+werkzeug
