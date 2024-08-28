@@ -75,7 +75,6 @@ def home():
             result_png_file = os.path.join("./uploads", "plot.png")
             
             return render_template("index.html", txt_file=result_txt_file, png_file=result_png_file)
-        
         else:
             return "Please upload a .txt file.", 400
     else:    
